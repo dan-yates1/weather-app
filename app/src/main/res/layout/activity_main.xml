@@ -13,7 +13,7 @@
         android:id="@+id/pbLoading"
         android:visibility="visible"
         android:layout_centerInParent="true"/>
-    
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -58,7 +58,7 @@
                 android:padding="5dp"
                 app:hintTextColor="@color/white"
                 android:textColorHint="@color/white">
-                
+
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -71,7 +71,7 @@
                     android:background="@android:color/transparent" />
 
             </com.google.android.material.textfield.TextInputLayout>
-            
+
             <ImageView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -84,7 +84,7 @@
                 app:tint="@color/white"/>
 
         </LinearLayout>
-        
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -98,9 +98,10 @@
             android:textSize="70dp" />
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:id="@+id/ivIcon"
+            android:scaleType="fitCenter"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/tvTemperature"
             android:src="@drawable/weather_icon" />
@@ -125,7 +126,7 @@
             android:textColor="@color/white"
             android:textStyle="bold"
             android:layout_above="@+id/rvWeather"/>
-        
+
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

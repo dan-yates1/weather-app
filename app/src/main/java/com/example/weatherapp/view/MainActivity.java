@@ -1,5 +1,6 @@
 package com.example.weatherapp.view;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,10 +22,21 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.weatherapp.R;
 import com.example.weatherapp.adapter.WeatherAdapter;
 import com.example.weatherapp.model.Weather;
 import com.google.android.material.textfield.TextInputEditText;
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
@@ -71,9 +83,14 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_CODE);
         }
         Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-        city = getCity(location.getLongitude(), location.getLatitude());
-
-        getWeatherData(city);
+        //city = getCity(location.getLongitude(), location.getLatitude());
+        if (location != null){city = getCity(location.getLongitude(),location.getLatitude());
+            getWeatherData(city);
+        } else {
+            city = "London";
+            getWeatherData(city);
+        }
+        //tvCity.setText(city);
 
         ivSearch.setOnClickListener(view -> {
             String city = etCity.getText().toString();
@@ -81,35 +98,94 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Please enter a city name", Toast.LENGTH_SHORT).show();
             } else {
                 tvCity.setText(city);
+                pbLoading.setVisibility(View.VISIBLE);
+                rlHome.setVisibility(View.GONE);
                 getWeatherData(city);
+                pbLoading.setVisibility(View.GONE);
+                rlHome.setVisibility(View.VISIBLE);
             }
         });
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_CODE) {
+            if  (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Permissions granted", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Please enable permissions", Toast.LENGTH_SHORT).show();
+                //finish();
+            }
+        }
+    }
+
     private void getWeatherData(String city) {
         String url = "http://api.weatherapi.com/v1/forecast.json?key=431a3646932a493897d130047230309&q=" + city + "&days=7&aqi=no&alerts=no";
+        tvCity.setText(city);
+        RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
 
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, response -> {
+            pbLoading.setVisibility(View.GONE);
+            rlHome.setVisibility(View.VISIBLE);
+            weatherArrayList.clear();
+
+            try {
+                String temperature = response.getJSONObject("current").getString("temp_c");
+                tvTemperature.setText(temperature + "°");
+                int isDay = response.getJSONObject("current").getInt("is_day");
+                if (isDay == 1) {
+                    Picasso.get().load(R.drawable.day_bg);
+                } else {
+                    Picasso.get().load(R.drawable.night_bg);
+                }
+                String condition = response.getJSONObject("current").getJSONObject("condition").getString("text");
+                tvCondition.setText(condition);
+                String icon = response.getJSONObject("current").getJSONObject("condition").getString("icon");
+                Picasso.get().load("http:".concat(icon)).into(ivIcon);
+
+                JSONObject forecastObject = response.getJSONObject("forecast");
+                JSONObject forecastDayObject = forecastObject.getJSONArray("forecastday").getJSONObject(0);
+                JSONArray hourArray = forecastDayObject.getJSONArray("hour");
+
+                for (int i = 0; i < hourArray.length(); i++) {
+                    JSONObject hourObject = hourArray.getJSONObject(i);
+                    String time = hourObject.getString("time");
+                    String temp = hourObject.getString("temp_c");
+                    String img = hourObject.getJSONObject("condition").getString("icon");
+                    String cond = hourObject.getJSONObject("condition").getString("text");
+                    String wind = hourObject.getString("wind_kph");
+                    weatherArrayList.add(new Weather(time, temp, img, wind, cond));
+                }
+                weatherAdapter.notifyDataSetChanged();
+
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+
+        }, error -> Toast.makeText(MainActivity.this, "Please enter valid city", Toast.LENGTH_SHORT).show());
+        requestQueue.add(jsonObjectRequest);
     }
 
     private String getCity(double longitude, double latitude) {
-        String city = "Not found!";
+        String cityName = "City not found";
         Geocoder geo = new Geocoder(getBaseContext(), Locale.getDefault());
         try {
-           List<Address> addressList = geo.getFromLocation(longitude, latitude, 10);
+           List<Address> addressList = geo.getFromLocation(latitude, longitude, 10);
            for (Address address : addressList) {
                if (address != null) {
-                   String s = address.getLocality();
+                   String city = address.getLocality();
                    if (city != null && !city.equals("")) {
-                        city = s;
+                        cityName = city;
                    } else {
                        Log.d("TAG", "CITY NOT FOUND");
-                       Toast.makeText(this, "User city not found", Toast.LENGTH_SHORT).show();
+                       //Toast.makeText(this, "User city not found", Toast.LENGTH_SHORT).show();
                    }
                }
            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        return city;
+        return cityName;
     }
 }
