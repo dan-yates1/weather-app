@@ -121,7 +121,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getWeatherData(String city) {
-        String url = "http://api.weatherapi.com/v1/forecast.json?key=431a3646932a493897d130047230309&q=" + city + "&days=7&aqi=no&alerts=no";
+        //String url = "http://api.weatherapi.com/v1/forecast.json?key=431a3646932a493897d130047230309&q=" + city + "&days=7&aqi=no&alerts=no";
+        String url = "http://api.weatherapi.com/v1/forecast.json?key=431a3646932a493897d130047230309&q=" + city + "&days=7";
         tvCity.setText(city);
         RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
 
@@ -135,9 +136,9 @@ public class MainActivity extends AppCompatActivity {
                 tvTemperature.setText(temperature + "°");
                 int isDay = response.getJSONObject("current").getInt("is_day");
                 if (isDay == 1) {
-                    Picasso.get().load(R.drawable.day_bg);
+                    Picasso.get().load("https://img.freepik.com/free-photo/beautiful-shining-stars-night-sky_181624-622.jpg?w=1480&t=st=1693777503~exp=1693778103~hmac=5406f56fd41143bf34a36e932c07ca3a1f673e8f3dbe1dd1644da9af971e793e").into(ivBg);
                 } else {
-                    Picasso.get().load(R.drawable.night_bg);
+                    Picasso.get().load("https://static.vecteezy.com/system/resources/previews/027/224/534/non_2x/the-breathtaking-view-in-nakhornsrithammarat-thailand-as-seen-from-the-point-of-view-of-a-tourist-with-the-hill-being-surrounded-by-fog-and-a-golden-sky-in-the-background-free-photo.jpg").into(ivBg);
                 }
                 String condition = response.getJSONObject("current").getJSONObject("condition").getString("text");
                 tvCondition.setText(condition);
