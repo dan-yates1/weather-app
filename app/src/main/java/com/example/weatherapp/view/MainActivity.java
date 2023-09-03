@@ -147,15 +147,31 @@ public class MainActivity extends AppCompatActivity {
 
                 JSONObject forecastObject = response.getJSONObject("forecast");
                 JSONObject forecastDayObject = forecastObject.getJSONArray("forecastday").getJSONObject(0);
+                JSONArray forecastArray = forecastObject.getJSONArray("forecastday");
                 JSONArray hourArray = forecastDayObject.getJSONArray("hour");
+                JSONObject dayObject = forecastArray.getJSONObject(0);
+                JSONObject day2Object = dayObject.getJSONObject("day");
 
-                for (int i = 0; i < hourArray.length(); i++) {
+                //String time = forecastDayObject.getString("date");
+
+                /*for (int i = 0; i < hourArray.length(); i++) {
                     JSONObject hourObject = hourArray.getJSONObject(i);
                     String time = hourObject.getString("time");
                     String temp = hourObject.getString("temp_c");
                     String img = hourObject.getJSONObject("condition").getString("icon");
                     String cond = hourObject.getJSONObject("condition").getString("text");
                     String wind = hourObject.getString("wind_kph");
+                    weatherArrayList.add(new Weather(time, temp, img, wind, cond));
+                }*/
+
+                for (int i = 0; i < forecastArray.length(); i++) {
+                    dayObject = forecastArray.getJSONObject(i);
+                    day2Object = dayObject.getJSONObject("day");
+                    String time = dayObject.getString("date");
+                    String temp = day2Object.getString("avgtemp_c");
+                    String img = day2Object.getJSONObject("condition").getString("icon");
+                    String cond = day2Object.getJSONObject("condition").getString("text");
+                    String wind = day2Object.getString("avgvis_km");
                     weatherArrayList.add(new Weather(time, temp, img, wind, cond));
                 }
                 weatherAdapter.notifyDataSetChanged();
