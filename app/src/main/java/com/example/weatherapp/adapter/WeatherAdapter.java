@@ -55,7 +55,7 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.ViewHold
         }
         holder.itemView.setOnClickListener(view -> {
             Intent intent = new Intent(context, DetailsActivity.class);
-            intent.putExtra("weather", position);
+            intent.putExtra("WEATHER_DATA", weather);
             context.startActivity(intent);
         });
     }
@@ -71,7 +71,7 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.ViewHold
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvTemperature = itemView.findViewById(R.id.tvTemp);
-            tvTime = itemView.findViewById(R.id.tvTime);
+            tvTime = itemView.findViewById(R.id.tvHour);
             tvWind = itemView.findViewById(R.id.tvWind);
             ivCondition = itemView.findViewById(R.id.ivCondition);
         }

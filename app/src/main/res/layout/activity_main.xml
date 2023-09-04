@@ -37,14 +37,14 @@
             android:layout_marginTop="30dp"
             android:padding="20dp"
             android:textSize="18sp"
-            android:id="@+id/tvCity"/>
+            android:id="@+id/tvDay"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:id="@+id/llEdit"
-            android:layout_below="@+id/tvCity"
+            android:layout_below="@+id/tvDay"
             android:weightSum="5">
 
             <com.google.android.material.textfield.TextInputLayout
@@ -100,7 +100,7 @@
         <ImageView
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:id="@+id/ivIcon"
+            android:id="@+id/ivCondition2"
             android:scaleType="fitCenter"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/tvTemperature"
@@ -116,7 +116,7 @@
             android:textAlignment="center"
             android:text="Sunny"
             android:textColor="@color/white"
-            android:layout_below="@+id/ivIcon"/>
+            android:layout_below="@+id/ivCondition2"/>
 
         <TextView
             android:layout_width="match_parent"

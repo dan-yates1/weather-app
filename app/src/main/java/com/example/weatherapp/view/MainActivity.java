@@ -24,8 +24,6 @@ import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.weatherapp.R;
@@ -39,10 +37,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Locale;
-import java.util.Queue;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -66,12 +62,12 @@ public class MainActivity extends AppCompatActivity {
 
         rlHome = findViewById(R.id.rlHome);
         pbLoading = findViewById(R.id.pbLoading);
-        tvCity = findViewById(R.id.tvCity);
+        tvCity = findViewById(R.id.tvDay);
         tvTemperature = findViewById(R.id.tvTemperature);
         tvCondition = findViewById(R.id.tvCondition);
         etCity = findViewById(R.id.etCity);
         ivBg = findViewById(R.id.ivBg);
-        ivIcon = findViewById(R.id.ivIcon);
+        ivIcon = findViewById(R.id.ivCondition2);
         ivSearch = findViewById(R.id.ivSearch);
         rvWeather = findViewById(R.id.rvWeather);
         weatherArrayList = new ArrayList<>();
