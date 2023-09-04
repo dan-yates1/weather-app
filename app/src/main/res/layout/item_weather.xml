@@ -12,6 +12,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:background="@drawable/card_bg">
 
         <TextView
@@ -37,8 +38,8 @@
 
         <ImageView
             android:id="@+id/ivCondition"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/tvTemp"
             android:layout_centerHorizontal="true"
             android:layout_marginStart="5dp"

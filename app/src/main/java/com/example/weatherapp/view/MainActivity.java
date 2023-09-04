@@ -83,26 +83,22 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_CODE);
         }
         Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-        //city = getCity(location.getLongitude(), location.getLatitude());
-        if (location != null){city = getCity(location.getLongitude(),location.getLatitude());
-            getWeatherData(city);
+
+        if (location != null) {
+            city = getCity(location.getLongitude(),location.getLatitude());
         } else {
             city = "London";
-            getWeatherData(city);
         }
-        //tvCity.setText(city);
+
+        getWeatherData(city);
 
         ivSearch.setOnClickListener(view -> {
             String city = etCity.getText().toString();
             if (city.isEmpty()) {
                 Toast.makeText(MainActivity.this, "Please enter a city name", Toast.LENGTH_SHORT).show();
             } else {
-                tvCity.setText(city);
-                pbLoading.setVisibility(View.VISIBLE);
-                rlHome.setVisibility(View.GONE);
                 getWeatherData(city);
-                pbLoading.setVisibility(View.GONE);
-                rlHome.setVisibility(View.VISIBLE);
+                etCity.setText("");
             }
         });
     }
@@ -121,21 +117,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getWeatherData(String city) {
-        //String url = "http://api.weatherapi.com/v1/forecast.json?key=431a3646932a493897d130047230309&q=" + city + "&days=7&aqi=no&alerts=no";
         String url = "http://api.weatherapi.com/v1/forecast.json?key=431a3646932a493897d130047230309&q=" + city + "&days=7";
-        tvCity.setText(city);
         RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
-
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, response -> {
-            pbLoading.setVisibility(View.GONE);
-            rlHome.setVisibility(View.VISIBLE);
             weatherArrayList.clear();
-
+            pbLoading.setVisibility(View.VISIBLE);
+            rlHome.setVisibility(View.GONE);
             try {
                 String temperature = response.getJSONObject("current").getString("temp_c");
                 tvTemperature.setText(temperature + "°");
                 int isDay = response.getJSONObject("current").getInt("is_day");
-                if (isDay == 1) {
+                if (isDay == 0) {
                     Picasso.get().load("https://img.freepik.com/free-photo/beautiful-shining-stars-night-sky_181624-622.jpg?w=1480&t=st=1693777503~exp=1693778103~hmac=5406f56fd41143bf34a36e932c07ca3a1f673e8f3dbe1dd1644da9af971e793e").into(ivBg);
                 } else {
                     Picasso.get().load("https://static.vecteezy.com/system/resources/previews/027/224/534/non_2x/the-breathtaking-view-in-nakhornsrithammarat-thailand-as-seen-from-the-point-of-view-of-a-tourist-with-the-hill-being-surrounded-by-fog-and-a-golden-sky-in-the-background-free-photo.jpg").into(ivBg);
@@ -145,36 +137,23 @@ public class MainActivity extends AppCompatActivity {
                 String icon = response.getJSONObject("current").getJSONObject("condition").getString("icon");
                 Picasso.get().load("http:".concat(icon)).into(ivIcon);
 
-                JSONObject forecastObject = response.getJSONObject("forecast");
-                JSONObject forecastDayObject = forecastObject.getJSONArray("forecastday").getJSONObject(0);
-                JSONArray forecastArray = forecastObject.getJSONArray("forecastday");
-                JSONArray hourArray = forecastDayObject.getJSONArray("hour");
-                JSONObject dayObject = forecastArray.getJSONObject(0);
-                JSONObject day2Object = dayObject.getJSONObject("day");
+                JSONArray jsonArray = response.getJSONObject("forecast").getJSONArray("forecastday");
 
-                //String time = forecastDayObject.getString("date");
-
-                /*for (int i = 0; i < hourArray.length(); i++) {
-                    JSONObject hourObject = hourArray.getJSONObject(i);
-                    String time = hourObject.getString("time");
-                    String temp = hourObject.getString("temp_c");
-                    String img = hourObject.getJSONObject("condition").getString("icon");
-                    String cond = hourObject.getJSONObject("condition").getString("text");
-                    String wind = hourObject.getString("wind_kph");
-                    weatherArrayList.add(new Weather(time, temp, img, wind, cond));
-                }*/
-
-                for (int i = 0; i < forecastArray.length(); i++) {
-                    dayObject = forecastArray.getJSONObject(i);
-                    day2Object = dayObject.getJSONObject("day");
-                    String time = dayObject.getString("date");
-                    String temp = day2Object.getString("avgtemp_c");
-                    String img = day2Object.getJSONObject("condition").getString("icon");
-                    String cond = day2Object.getJSONObject("condition").getString("text");
-                    String wind = day2Object.getString("avgvis_km");
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject forecastDay = jsonArray.getJSONObject(i);
+                    JSONObject day = forecastDay.getJSONObject("day");
+                    String time = forecastDay.getString("date");
+                    String temp = day.getString("maxtemp_c");
+                    String img = day.getJSONObject("condition").getString("icon");
+                    String cond = day.getJSONObject("condition").getString("text");
+                    String wind = day.getString("avgvis_km");
                     weatherArrayList.add(new Weather(time, temp, img, wind, cond));
                 }
+
                 weatherAdapter.notifyDataSetChanged();
+                tvCity.setText(city);
+                pbLoading.setVisibility(View.GONE);
+                rlHome.setVisibility(View.VISIBLE);
 
             } catch (JSONException e) {
                 throw new RuntimeException(e);

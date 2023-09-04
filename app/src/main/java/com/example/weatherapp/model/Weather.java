@@ -16,6 +16,9 @@ public class Weather {
         this.condition = condition;
     }
 
+    public Weather() {
+    }
+
     public String getTime() {
         return time;
     }
