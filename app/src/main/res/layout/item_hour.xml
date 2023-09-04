@@ -30,7 +30,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/ivIcon"
+            android:id="@+id/ivCond"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginStart="20dp"
@@ -50,7 +50,7 @@
             android:textAlignment="center"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/ivIcon"
+            app:layout_constraintStart_toEndOf="@+id/ivCond"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView

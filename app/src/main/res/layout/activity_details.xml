@@ -89,11 +89,12 @@
 
     <LinearLayout
         android:id="@+id/llDetails"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_below="@+id/llCurrent"
-        android:gravity="center">
+        android:gravity="center"
+        android:layout_centerHorizontal="true">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -197,7 +198,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/llDetails"
         android:layout_alignParentBottom="true"
-        android:padding="20dp"
-        tools:listitem="@layout/item_hour"/>
+        android:padding="20dp" />
 
 </RelativeLayout>

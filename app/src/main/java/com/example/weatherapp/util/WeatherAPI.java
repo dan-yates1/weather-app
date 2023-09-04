@@ -45,7 +45,7 @@ public class WeatherAPI {
                     String img = day.getJSONObject("condition").getString("icon");
                     String cond = day.getJSONObject("condition").getString("text");
                     String wind = day.getString("avgvis_km");
-                    weatherArrayList.add(new Weather(time, temp, img, wind, cond));
+                    weatherArrayList.add(new Weather(time, temp, img, wind, cond, city));
                 }
             } catch (JSONException e) {
                 throw new RuntimeException(e);

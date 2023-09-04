@@ -1,21 +1,36 @@
 package com.example.weatherapp.view;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.weatherapp.R;
+import com.example.weatherapp.adapter.DetailsAdapter;
+import com.example.weatherapp.adapter.WeatherAdapter;
 import com.example.weatherapp.model.Weather;
+import com.example.weatherapp.model.WeatherDetails;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class DetailsActivity extends AppCompatActivity {
@@ -23,6 +38,8 @@ public class DetailsActivity extends AppCompatActivity {
     private TextView tvDay, tvAvgTemp, tvCondition, tvRain, tvHumidity, tvWind;
     private ImageView ivIcon;
     private RecyclerView rvHourly;
+    private ArrayList<WeatherDetails> weatherDetailsArrayList;
+    private DetailsAdapter detailsAdapter;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -61,5 +78,46 @@ public class DetailsActivity extends AppCompatActivity {
             tvCondition.setText(weather.getCondition());
             Picasso.get().load("http:".concat(weather.getIcon())).into(ivIcon);
         }
+
+        rvHourly = findViewById(R.id.rvHourly);
+        rvHourly.setLayoutManager(new LinearLayoutManager(this));
+        weatherDetailsArrayList = new ArrayList<>();
+        detailsAdapter = new DetailsAdapter(weatherDetailsArrayList, this);
+        rvHourly.setAdapter(detailsAdapter);
+
+        //weatherDetailsArrayList.add(new WeatherDetails("31", "16", "Clear", "//cdn.weatherapi.com/weather/64x64/night/113.png", "2023-09-04 00:00"));
+        //detailsAdapter.notifyDataSetChanged();
+
+        getHourlyForecast(weather.getCity());
+    }
+
+    private void getHourlyForecast(String city) {
+        String url = "http://api.weatherapi.com/v1/forecast.json?key=431a3646932a493897d130047230309&q=" + city + "&days=7";
+        RequestQueue requestQueue = Volley.newRequestQueue(DetailsActivity.this);
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, response -> {
+            weatherDetailsArrayList.clear();
+            try {
+                JSONObject forecastObject = response.getJSONObject("forecast");
+                JSONObject forecastDayObject = forecastObject.getJSONArray("forecastday").getJSONObject(0);
+                JSONArray hourArray = forecastDayObject.getJSONArray("hour");
+
+                for (int i = 0; i < hourArray.length(); i++) {
+                    JSONObject hourObj = hourArray.getJSONObject(i);
+                    String maxTemp = hourObj.getString("temp_f");
+                    String minTemp = hourObj.getString("temp_c");
+                    String condition = hourObj.getJSONObject("condition").getString("text");
+                    String icon = hourObj.getJSONObject("condition").getString("icon");
+                    String hour = hourObj.getString("time");
+                    weatherDetailsArrayList.add(new WeatherDetails(maxTemp, minTemp, condition, icon, hour));
+                }
+
+                detailsAdapter.notifyDataSetChanged();
+
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+
+        }, error -> Toast.makeText(DetailsActivity.this, "Please enter valid city", Toast.LENGTH_SHORT).show());
+        requestQueue.add(jsonObjectRequest);
     }
 }

@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
                     String img = day.getJSONObject("condition").getString("icon");
                     String cond = day.getJSONObject("condition").getString("text");
                     String wind = day.getString("avgvis_km");
-                    weatherArrayList.add(new Weather(time, temp, img, wind, cond));
+                    weatherArrayList.add(new Weather(time, temp, img, wind, cond, "London"));
                 }
 
                 weatherAdapter.notifyDataSetChanged();

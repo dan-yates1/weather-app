@@ -9,13 +9,15 @@ public class Weather implements Serializable {
     private String icon;
     private String wind;
     private String condition;
+    private String city;
 
-    public Weather(String time, String temperature, String icon, String wind, String condition) {
+    public Weather(String time, String temperature, String icon, String wind, String condition, String city) {
         this.time = time;
         this.temperature = temperature;
         this.icon = icon;
         this.wind = wind;
         this.condition = condition;
+        this.city = city;
     }
 
     public Weather() {
@@ -59,5 +61,13 @@ public class Weather implements Serializable {
 
     public void setCondition(String condition) {
         this.condition = condition;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 }
