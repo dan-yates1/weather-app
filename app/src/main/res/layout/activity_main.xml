@@ -8,11 +8,11 @@
     android:background="@color/black_shade">
 
     <ProgressBar
+        android:id="@+id/pbLoading"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:id="@+id/pbLoading"
-        android:visibility="visible"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true"
+        android:visibility="visible" />
 
     <RelativeLayout
         android:layout_width="match_parent"

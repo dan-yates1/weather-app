@@ -1,6 +1,8 @@
 package com.example.weatherapp.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.weatherapp.R;
 import com.example.weatherapp.model.Weather;
+import com.example.weatherapp.view.DetailsActivity;
 import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -39,7 +40,7 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(@NonNull WeatherAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull WeatherAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         Weather weather = weatherArrayList.get(position);
         Picasso.get().load("http:".concat(weather.getIcon())).into(holder.ivCondition);
         holder.tvTemperature.setText(weather.getTemperature() + "°");
@@ -52,6 +53,11 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.ViewHold
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
+        holder.itemView.setOnClickListener(view -> {
+            Intent intent = new Intent(context, DetailsActivity.class);
+            intent.putExtra("weather", position);
+            context.startActivity(intent);
+        });
     }
 
     @Override
