@@ -40,6 +40,7 @@ public class DetailsActivity extends AppCompatActivity {
     private RecyclerView rvHourly;
     private ArrayList<WeatherDetails> weatherDetailsArrayList;
     private DetailsAdapter detailsAdapter;
+    private Weather current;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -61,11 +62,14 @@ public class DetailsActivity extends AppCompatActivity {
         tvHumidity = findViewById(R.id.tvHumidity);
         ivIcon = findViewById(R.id.ivCondition2);
 
+        current = new Weather();
+
         Weather weather = (Weather) getIntent().getSerializableExtra("WEATHER_DATA");
 
         if (weather != null) {
             SimpleDateFormat initial = new SimpleDateFormat("yyyy-MM-dd");
             SimpleDateFormat output = new SimpleDateFormat("EEEE");
+            current = weather;
             try {
                 Date date = initial.parse(weather.getTime());
                 tvDay.setText(output.format(date));
@@ -92,7 +96,7 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     private void getHourlyForecast(String city) {
-        String url = "http://api.weatherapi.com/v1/forecast.json?key=431a3646932a493897d130047230309&q=" + city + "&days=7";
+        String url = "http://api.weatherapi.com/v1/forecast.json?key=431a3646932a493897d130047230309&q=" + city + "&dt=" + current.getTime();
         RequestQueue requestQueue = Volley.newRequestQueue(DetailsActivity.this);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, response -> {
             weatherDetailsArrayList.clear();
@@ -114,7 +118,6 @@ public class DetailsActivity extends AppCompatActivity {
                     tvHumidity.setText(humidity + "%");
                     weatherDetailsArrayList.add(new WeatherDetails(maxTemp, minTemp, condition, icon, hour));
                 }
-
                 detailsAdapter.notifyDataSetChanged();
 
             } catch (JSONException e) {
