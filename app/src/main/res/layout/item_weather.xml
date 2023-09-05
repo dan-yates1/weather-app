@@ -50,17 +50,20 @@
             android:src="@drawable/weather_icon" />
 
         <TextView
+            android:id="@+id/tvWind"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:gravity="center"
-            android:layout_centerHorizontal="true"
-            android:text="8 km/h"
-            android:id="@+id/tvWind"
-            android:textColor="@color/white"
             android:layout_below="@+id/ivCondition"
-            android:layout_margin="4dp"
-            android:padding="5dp"/>
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginBottom="4dp"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="8 km/h"
+            android:textAlignment="center"
+            android:textColor="@color/white" />
 
     </RelativeLayout>
 

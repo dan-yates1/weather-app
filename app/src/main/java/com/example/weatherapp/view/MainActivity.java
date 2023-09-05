@@ -124,9 +124,9 @@ public class MainActivity extends AppCompatActivity {
                 tvTemperature.setText(temperature + "°");
                 int isDay = response.getJSONObject("current").getInt("is_day");
                 if (isDay == 0) {
-                    Picasso.get().load("https://img.freepik.com/free-photo/beautiful-shining-stars-night-sky_181624-622.jpg?w=1480&t=st=1693777503~exp=1693778103~hmac=5406f56fd41143bf34a36e932c07ca3a1f673e8f3dbe1dd1644da9af971e793e").into(ivBg);
+                    //Picasso.get().load("https://img.freepik.com/free-photo/beautiful-shining-stars-night-sky_181624-622.jpg?w=1480&t=st=1693777503~exp=1693778103~hmac=5406f56fd41143bf34a36e932c07ca3a1f673e8f3dbe1dd1644da9af971e793e").into(ivBg);
                 } else {
-                    Picasso.get().load("https://static.vecteezy.com/system/resources/previews/027/224/534/non_2x/the-breathtaking-view-in-nakhornsrithammarat-thailand-as-seen-from-the-point-of-view-of-a-tourist-with-the-hill-being-surrounded-by-fog-and-a-golden-sky-in-the-background-free-photo.jpg").into(ivBg);
+                    //Picasso.get().load("https://static.vecteezy.com/system/resources/previews/027/224/534/non_2x/the-breathtaking-view-in-nakhornsrithammarat-thailand-as-seen-from-the-point-of-view-of-a-tourist-with-the-hill-being-surrounded-by-fog-and-a-golden-sky-in-the-background-free-photo.jpg").into(ivBg);
                 }
                 String condition = response.getJSONObject("current").getJSONObject("condition").getString("text");
                 tvCondition.setText(condition);

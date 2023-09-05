@@ -108,6 +108,10 @@ public class DetailsActivity extends AppCompatActivity {
                     String condition = hourObj.getJSONObject("condition").getString("text");
                     String icon = hourObj.getJSONObject("condition").getString("icon");
                     String hour = hourObj.getString("time");
+                    String chanceOfRain = hourObj.getString("chance_of_rain");
+                    tvRain.setText(chanceOfRain + "%");
+                    String humidity = hourObj.getString("humidity");
+                    tvHumidity.setText(humidity + "%");
                     weatherDetailsArrayList.add(new WeatherDetails(maxTemp, minTemp, condition, icon, hour));
                 }
 
