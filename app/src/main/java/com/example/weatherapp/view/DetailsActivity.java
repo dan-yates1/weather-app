@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +43,8 @@ public class DetailsActivity extends AppCompatActivity {
     private ArrayList<WeatherDetails> weatherDetailsArrayList;
     private DetailsAdapter detailsAdapter;
     private Weather current;
+    private RelativeLayout rlHome;
+    private ProgressBar pbLoading;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -61,6 +65,8 @@ public class DetailsActivity extends AppCompatActivity {
         tvWind = findViewById(R.id.tvWind);
         tvHumidity = findViewById(R.id.tvHumidity);
         ivIcon = findViewById(R.id.ivCondition2);
+        rlHome = findViewById(R.id.rlHome);
+        pbLoading = findViewById(R.id.pbLoading);
 
         current = new Weather();
 
@@ -89,9 +95,6 @@ public class DetailsActivity extends AppCompatActivity {
         detailsAdapter = new DetailsAdapter(weatherDetailsArrayList, this);
         rvHourly.setAdapter(detailsAdapter);
 
-        //weatherDetailsArrayList.add(new WeatherDetails("31", "16", "Clear", "//cdn.weatherapi.com/weather/64x64/night/113.png", "2023-09-04 00:00"));
-        //detailsAdapter.notifyDataSetChanged();
-
         getHourlyForecast(weather.getCity());
     }
 
@@ -101,6 +104,8 @@ public class DetailsActivity extends AppCompatActivity {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, response -> {
             weatherDetailsArrayList.clear();
             try {
+                pbLoading.setVisibility(View.VISIBLE);
+                rlHome.setVisibility(View.GONE);
                 JSONObject forecastObject = response.getJSONObject("forecast");
                 JSONObject forecastDayObject = forecastObject.getJSONArray("forecastday").getJSONObject(0);
                 JSONArray hourArray = forecastDayObject.getJSONArray("hour");
@@ -119,6 +124,8 @@ public class DetailsActivity extends AppCompatActivity {
                     weatherDetailsArrayList.add(new WeatherDetails(maxTemp, minTemp, condition, icon, hour));
                 }
                 detailsAdapter.notifyDataSetChanged();
+                pbLoading.setVisibility(View.GONE);
+                rlHome.setVisibility(View.VISIBLE);
 
             } catch (JSONException e) {
                 throw new RuntimeException(e);
